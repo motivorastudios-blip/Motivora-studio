@@ -1,0 +1,16 @@
+{
+  "name": "desktop",
+  "version": "1.0.0",
+  "description": "Motivora Studio desktop shell that wraps the local Flask + Blender workflow.",
+  "main": "main.js",
+  "scripts": {
+    "start": "./node_modules/.bin/electron .",
+    "dev": "SKIP_PY_SERVER=1 ./node_modules/.bin/electron ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "Proprietary",
+  "devDependencies": {
+    "electron": "^27.3.11"
+  }
+}

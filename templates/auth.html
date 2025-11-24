@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>{% if mode == 'login' %}Log In{% else %}Sign Up{% endif %} | Motivora Studio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class="app-mode">
+  <div class="site-shell">
+    <div class="card-container" style="max-width: 500px; margin: 60px auto; width: 100%;">
+      <div class="card" style="width: 100%; max-width: 500px; margin: 0 auto;">
+        <div class="panel panel-left">
+          <div class="panel-heading">
+            <h2>{% if mode == 'login' %}Log In{% else %}Create Account{% endif %}</h2>
+            <p class="subline">
+              {% if mode == 'login' %}
+                Welcome back! Log in to access your render history.
+              {% else %}
+                Sign up for free and preview watermarked renders. Upgrade to Pro to download watermark-free videos.
+              {% endif %}
+            </p>
+          </div>
+          
+          {% if google_oauth_enabled %}
+          <a href="{{ url_for('auth_google') }}" class="google-signin-button" style="display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; padding: 14px; background: white; border: 1px solid #dadce0; border-radius: 8px; text-decoration: none; color: #3c4043; font-weight: 500; font-size: 15px; margin-bottom: 20px; transition: box-shadow 0.2s;" onmouseover="this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='none'">
+            <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+              <g fill="#000" fill-rule="evenodd">
+                <path d="M9 3.48c1.69 0 2.83.73 3.48 1.34l2.54-2.48C13.46.89 11.43 0 9 0 5.48 0 2.44 2.02.96 4.96l2.91 2.26C4.6 5.05 6.62 3.48 9 3.48z" fill="#EA4335"/>
+                <path d="M17.64 9.2c0-.74-.06-1.28-.19-1.84H9v3.34h4.96c-.21 1.18-.84 2.18-1.79 2.91l2.75 2.13c1.66-1.52 2.72-3.75 2.72-6.54z" fill="#4285F4"/>
+                <path d="M3.88 10.78A5.54 5.54 0 0 1 3.58 9c0-.62.11-1.22.29-1.78L.96 4.96A9.008 9.008 0 0 0 0 9c0 1.45.35 2.82.96 4.04l2.92-2.26z" fill="#FBBC05"/>
+                <path d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.75-2.13c-.76.53-1.78.9-3.21.9-2.38 0-4.4-1.57-5.12-3.74L.96 13.04C2.45 15.98 5.48 18 9 18z" fill="#34A853"/>
+              </g>
+            </svg>
+            {% if mode == 'login' %}Sign in with Google{% else %}Sign up with Google{% endif %}
+          </a>
+          
+          <div style="display: flex; align-items: center; gap: 12px; margin: 20px 0; color: var(--muted); font-size: 0.9rem;">
+            <div style="flex: 1; height: 1px; background: var(--border);"></div>
+            <span>or</span>
+            <div style="flex: 1; height: 1px; background: var(--border);"></div>
+          </div>
+          {% endif %}
+          
+          <form id="auth-form" method="post" style="display: flex; flex-direction: column; gap: 20px;">
+            {% if mode == 'signup' %}
+            <label class="field">
+              Name
+              <input type="text" name="name" id="name" required autocomplete="name">
+            </label>
+            {% endif %}
+            
+            <label class="field">
+              Email
+              <input type="email" name="email" id="email" required autocomplete="email">
+            </label>
+            
+            <label class="field">
+              Password
+              <input type="password" name="password" id="password" required autocomplete="{% if mode == 'login' %}current-password{% else %}new-password{% endif %}">
+              {% if mode == 'signup' %}
+              <small style="color: var(--muted); font-size: 0.85rem; margin-top: 4px;">At least 6 characters</small>
+              {% endif %}
+            </label>
+            
+            <button type="submit" class="primary-button">
+              {% if mode == 'login' %}Log In{% else %}Sign Up{% endif %}
+            </button>
+            
+            <div class="upload-status" id="auth-status" style="min-height: 1.4em;"></div>
+          </form>
+          
+          <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border); text-align: center;">
+            {% if mode == 'login' %}
+              <p style="color: var(--muted);">Don't have an account? <a href="{{ url_for('auth_signup') }}" style="color: var(--accent);">Sign up</a></p>
+            {% else %}
+              <p style="color: var(--muted);">Already have an account? <a href="{{ url_for('auth_login') }}" style="color: var(--accent);">Log in</a></p>
+            {% endif %}
+            <p style="margin-top: 12px;"><a href="{{ url_for('render_page') }}" style="color: var(--muted); font-size: 0.9rem;">← Back to app</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    document.getElementById('auth-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const status = document.getElementById('auth-status');
+      const button = form.querySelector('button[type="submit"]');
+      
+      status.textContent = '';
+      button.disabled = true;
+      button.textContent = 'Please wait...';
+      
+      const formData = new FormData(form);
+      const url = form.action || window.location.pathname;
+      
+      try {
+        const resp = await fetch(url, {
+          method: 'POST',
+          body: formData,
+        });
+        
+        const data = await resp.json();
+        
+        if (resp.ok && data.redirect) {
+          window.location.href = data.redirect;
+        } else {
+          status.textContent = data.message || 'An error occurred.';
+          status.style.color = '#c25139';
+          button.disabled = false;
+          button.textContent = '{% if mode == 'login' %}Log In{% else %}Sign Up{% endif %}';
+        }
+      } catch (error) {
+        status.textContent = 'Connection error. Please try again.';
+        status.style.color = '#c25139';
+        button.disabled = false;
+        button.textContent = '{% if mode == 'login' %}Log In{% else %}Sign Up{% endif %}';
+      }
+    });
+  </script>
+</body>
+</html>
+

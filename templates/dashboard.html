@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Dashboard | Motivora Studio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class="app-mode">
+  <div class="site-shell">
+    <nav class="navbar">
+      <a href="{{ url_for('render_page') }}" class="navbar-brand">Motivora Studio</a>
+      <div class="navbar-links">
+        <a href="{{ url_for('render_page') }}">Render</a>
+        <a href="{{ url_for('dashboard') }}" class="active">Dashboard</a>
+        <form method="POST" action="{{ url_for('auth_logout') }}" style="display: inline;">
+          <button type="submit" class="ghost-button">Logout</button>
+        </form>
+      </div>
+    </nav>
+
+    <div class="card-container" style="margin-top: 40px;">
+      <div class="panel panel-left" style="flex: 1;">
+        <h1>Dashboard</h1>
+        <p>Welcome back, {{ current_user.name }}!</p>
+        
+        <div class="stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 30px 0;">
+          <div class="stat-card" style="background: var(--paper); padding: 20px; border-radius: 12px; border: 1px solid var(--border);">
+            <div style="font-size: 2rem; font-weight: 700; color: var(--accent);">{{ stats.total_renders }}</div>
+            <div style="color: var(--muted); margin-top: 4px;">Total Renders</div>
+          </div>
+          <div class="stat-card" style="background: var(--paper); padding: 20px; border-radius: 12px; border: 1px solid var(--border);">
+            <div style="font-size: 2rem; font-weight: 700; color: var(--accent);">{{ stats.renders_this_month }}</div>
+            <div style="color: var(--muted); margin-top: 4px;">This Month</div>
+          </div>
+          <div class="stat-card" style="background: var(--paper); padding: 20px; border-radius: 12px; border: 1px solid var(--border);">
+            <div style="font-size: 1.2rem; font-weight: 600; color: var(--accent); text-transform: capitalize;">{{ stats.subscription_tier }}</div>
+            <div style="color: var(--muted); margin-top: 4px;">Plan</div>
+            {% if stats.subscription_tier == "free" %}
+            <a href="{{ upgrade_url }}" target="_blank" class="primary-button" style="display: inline-block; margin-top: 12px; text-decoration: none; padding: 8px 16px; font-size: 0.9rem;">Upgrade to Pro</a>
+            {% endif %}
+          </div>
+        </div>
+
+        <h2 style="margin-top: 40px;">Recent Renders</h2>
+        {% if renders %}
+          <div class="renders-list" style="display: grid; gap: 16px; margin-top: 20px;">
+            {% for render in renders %}
+            <div class="render-card" style="background: var(--paper); padding: 20px; border-radius: 12px; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <div style="font-weight: 600; margin-bottom: 4px;">{{ render.download_name }}</div>
+                <div style="color: var(--muted); font-size: 0.9rem;">
+                  {{ render.created_at.strftime('%B %d, %Y at %I:%M %p') }} • 
+                  {{ render.quality|capitalize }} • 
+                  {{ render.render_size }}p • 
+                  <span style="text-transform: capitalize; color: {% if render.state == 'finished' %}#10b981{% elif render.state == 'error' %}#ef4444{% elif render.state == 'running' %}#f59e0b{% else %}#6b7280{% endif %};">
+                    {{ render.state }}
+                  </span>
+                </div>
+              </div>
+              <div style="display: flex; gap: 12px;">
+                {% if render.state == 'finished' %}
+                <a href="{{ url_for('dashboard_render', render_id=render.id) }}" class="primary-button" style="text-decoration: none; padding: 8px 16px;">Download</a>
+                {% else %}
+                <span style="color: var(--muted); font-size: 0.9rem;">{{ render.message or 'Processing...' }}</span>
+                {% endif %}
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <p style="color: var(--muted); margin-top: 20px;">No renders yet. <a href="{{ url_for('render_page') }}">Create your first render</a>!</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <footer class="site-footer" style="margin-top: 60px; padding-top: 40px; border-top: 1px solid var(--border); text-align: center; color: var(--muted);">
+      <p>&copy; {{ current_year }} Motivora Studio. All rights reserved.</p>
+    </footer>
+  </div>
+</body>
+</html>
+
+

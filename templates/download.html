@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Download Desktop App | Motivora Studio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Download Motivora Studio desktop app for macOS and Windows. Render STL files locally with full control.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class="marketing-mode">
+  <header class="site-header">
+    <div class="site-logo">Motivora Studio</div>
+    <nav class="nav-links">
+      <a href="{{ url_for('index') }}">Home</a>
+      <a href="{{ url_for('render_page') }}">Try it Now</a>
+      {% if current_user %}
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+      {% else %}
+        <a href="{{ url_for('auth_login') }}">Log In</a>
+        <a href="{{ url_for('auth_signup') }}">Sign Up</a>
+      {% endif %}
+    </nav>
+  </header>
+  
+  <div class="background-glow"></div>
+  <main class="site-shell">
+    <section class="hero" style="padding: 80px 20px; text-align: center;">
+      <div style="max-width: 800px; margin: 0 auto;">
+        <h1 style="font-size: 3rem; margin-bottom: 16px;">Download Desktop App</h1>
+        <p style="font-size: 1.25rem; color: var(--muted); margin-bottom: 48px;">
+          Run Motivora Studio locally on your computer. Full control, offline rendering, and faster performance.
+        </p>
+        {% if request.args.get('error') == 'not_ready' %}
+        <div style="max-width: 600px; margin: 0 auto 24px; padding: 16px; background: rgba(212, 118, 15, 0.1); border: 1px solid rgba(212, 118, 15, 0.3); border-radius: 8px; color: var(--ink);">
+          <p style="margin: 0;">⚠️ <strong>Download preparing...</strong> The desktop app is being packaged. Please check back soon, or try the web version below.</p>
+        </div>
+        {% endif %}
+      </div>
+    </section>
+
+    <section style="padding: 0 20px 80px;">
+      <div class="card-container">
+        <div class="card" style="max-width: 900px; margin: 0 auto;">
+          <div class="panel panel-left">
+            <!-- Download Buttons -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 24px; margin-bottom: 48px; width: 100%;">
+              <div style="text-align: center; padding: 32px; background: var(--paper); border: 1px solid var(--border); border-radius: 12px;">
+                <div style="font-size: 2.5rem; margin-bottom: 16px;">🍎</div>
+                <h3 style="margin: 0 0 8px 0;">macOS</h3>
+                <p style="color: var(--muted); font-size: 0.9rem; margin: 0 0 20px 0;">macOS 10.15+ (Intel & Apple Silicon)</p>
+                <button class="primary-button" style="width: 100%;" data-platform="macos" onclick="window.location.href='{{ url_for('download_app') }}'">
+                  Download for macOS
+                </button>
+                {% if request.args.get('error') == 'not_ready' and request.args.get('platform') == 'macos' %}
+                <p style="font-size: 0.85rem; color: #c25139; margin-top: 12px;">⚠️ App file not ready yet. Packaging in progress...</p>
+                {% else %}
+                <p style="font-size: 0.85rem; color: var(--muted); margin-top: 12px;">Download will start automatically</p>
+                {% endif %}
+              </div>
+              
+              <div style="text-align: center; padding: 32px; background: var(--paper); border: 1px solid var(--border); border-radius: 12px;">
+                <div style="font-size: 2.5rem; margin-bottom: 16px;">🪟</div>
+                <h3 style="margin: 0 0 8px 0;">Windows</h3>
+                <p style="color: var(--muted); font-size: 0.9rem; margin: 0 0 20px 0;">Windows 10+ (64-bit)</p>
+                <button class="primary-button" style="width: 100%;" data-platform="windows" onclick="window.location.href='{{ url_for('download_app') }}'">
+                  Download for Windows
+                </button>
+                {% if request.args.get('error') == 'not_ready' and request.args.get('platform') == 'windows' %}
+                <p style="font-size: 0.85rem; color: #c25139; margin-top: 12px;">⚠️ App file not ready yet. Packaging in progress...</p>
+                {% else %}
+                <p style="font-size: 0.85rem; color: var(--muted); margin-top: 12px;">Download will start automatically</p>
+                {% endif %}
+              </div>
+            </div>
+
+            <!-- Features -->
+            <div style="margin-bottom: 48px;">
+              <h2 style="margin-bottom: 24px;">Why Download the Desktop App?</h2>
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 24px;">
+                <div>
+                  <h4 style="margin: 0 0 8px 0; display: flex; align-items: center; gap: 8px;">
+                    <span>⚡</span> Faster Rendering
+                  </h4>
+                  <p style="color: var(--muted); margin: 0;">Use your local GPU for maximum performance. No network latency.</p>
+                </div>
+                <div>
+                  <h4 style="margin: 0 0 8px 0; display: flex; align-items: center; gap: 8px;">
+                    <span>🔒</span> Privacy First
+                  </h4>
+                  <p style="color: var(--muted); margin: 0;">Your files never leave your computer. Full data privacy.</p>
+                </div>
+                <div>
+                  <h4 style="margin: 0 0 8px 0; display: flex; align-items: center; gap: 8px;">
+                    <span>📴</span> Offline Mode
+                  </h4>
+                  <p style="color: var(--muted); margin: 0;">Render without internet connection once installed.</p>
+                </div>
+                <div>
+                  <h4 style="margin: 0 0 8px 0; display: flex; align-items: center; gap: 8px;">
+                    <span>🎛️</span> Full Control
+                  </h4>
+                  <p style="color: var(--muted); margin: 0;">Customize Blender settings and access advanced options.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Requirements -->
+            <div style="margin-bottom: 48px; padding: 24px; background: rgba(212, 118, 15, 0.05); border-radius: 12px; border: 1px solid rgba(212, 118, 15, 0.2);">
+              <h3 style="margin: 0 0 16px 0;">System Requirements</h3>
+              <ul style="margin: 0; padding-left: 24px; color: var(--muted);">
+                <li><strong>macOS:</strong> macOS 10.15 (Catalina) or later, 4GB RAM minimum</li>
+                <li><strong>Windows:</strong> Windows 10 or later (64-bit), 4GB RAM minimum</li>
+                <li><strong>Blender:</strong> Blender 3.0+ installed (or we'll help you install it)</li>
+                <li><strong>GPU:</strong> Recommended for faster rendering (Metal, CUDA, or OptiX)</li>
+              </ul>
+            </div>
+
+            <!-- Alternative -->
+            <div style="text-align: center; padding: 32px; background: var(--paper); border: 1px solid var(--border); border-radius: 12px;">
+              <h3 style="margin: 0 0 16px 0;">Not Ready to Download Yet?</h3>
+              <p style="color: var(--muted); margin: 0 0 24px 0;">
+                Try Motivora Studio right in your browser. No download required!
+              </p>
+              <a href="{{ url_for('render_page') }}" class="primary-button" style="text-decoration: none; display: inline-block;">
+                Try Web Version
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer" style="margin-top: 80px;">
+    <p>&copy; {{ current_year }} Motivora Studio. All rights reserved.</p>
+  </footer>
+  
+  <script>
+    // Auto-download on page load if enabled
+    {% if auto_download %}
+    (function() {
+      const platform = navigator.platform.toLowerCase();
+      const userAgent = navigator.userAgent.toLowerCase();
+      let detectedPlatform = null;
+      
+      if (platform.includes('mac') || userAgent.includes('mac')) {
+        detectedPlatform = 'macos';
+      } else if (platform.includes('win') || userAgent.includes('win')) {
+        detectedPlatform = 'windows';
+      } else if (platform.includes('linux') || userAgent.includes('linux')) {
+        detectedPlatform = 'linux';
+      }
+      
+      // Auto-trigger download after a short delay
+      if (detectedPlatform) {
+        setTimeout(() => {
+          window.location.href = "{{ url_for('download_app') }}";
+        }, 500);
+      }
+    })();
+    {% endif %}
+    
+    // Manual download buttons
+    document.querySelectorAll('[data-platform]').forEach(button => {
+      button.addEventListener('click', function(e) {
+        e.preventDefault();
+        const platform = this.getAttribute('data-platform');
+        // You can customize the download URL per platform here if needed
+        window.location.href = "{{ url_for('download_app') }}";
+      });
+    });
+  </script>
+</body>
+</html>
+

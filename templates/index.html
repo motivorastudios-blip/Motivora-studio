@@ -1,0 +1,353 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Motivora Studio | STL Product Motion</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Motivora Studio turns STL files into cinematic 360° product motion using Blender automation. Drag, preview, and download seamless spins in minutes.">
+  <meta name="keywords" content="product motion, turntable video, blender automation, stl animation, ecommerce render, cinematic spin, product marketing">
+  <link rel="canonical" href="https://motivora.studio/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Motivora Studio | Automated Cinematic Product Spins">
+  <meta property="og:description" content="Upload STL files, preview orientation, and let Motivora Studio deliver transparent MP4/WebM 360° clips for Shopify, Etsy, and Kickstarter.">
+  <meta property="og:url" content="https://motivora.studio/">
+  <meta property="og:image" content="https://motivora.studio/social-preview.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Motivora Studio">
+  <meta name="twitter:description" content="Turn your models into cinematic product motion with local Blender automation.">
+  <meta name="twitter:image" content="https://motivora.studio/social-preview.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": "Motivora Studio",
+    "description": "Automated Blender renders that convert STL files into cinematic 360° product motion with transparent or cinematic backgrounds.",
+    "brand": {
+      "@type": "Brand",
+      "name": "Motivora Studio"
+    },
+    "offers": {
+      "@type": "Offer",
+      "priceCurrency": "USD",
+      "price": "39.00",
+      "availability": "https://schema.org/PreOrder"
+    },
+    "url": "https://motivora.studio/",
+    "category": "DigitalGoods"
+  }
+  </script>
+  {% if app_mode %}
+  <script>
+    window.DEFAULT_QUALITY = "{{ default_quality }}";
+  </script>
+  <script type="module" src="{{ url_for('static', filename='app.js') }}"></script>
+  {% endif %}
+</head>
+<body class="{{ body_class }}">
+  {% if not app_mode %}
+  <header class="site-header">
+    <div class="site-logo">Motivora Studio</div>
+    <nav class="nav-links">
+      <a href="{{ url_for('render_page') }}">Try it Now</a>
+      <a href="#workflow">How it Works</a>
+      <a href="#seo-benefits">Use Cases</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+      <a href="{{ url_for('download_page') }}">Download</a>
+    </nav>
+  </header>
+  {% endif %}
+  <div class="background-glow"></div>
+  <main class="site-shell">
+    {% if not app_mode %}
+    <section class="hero" id="top">
+      <div>
+        <p class="hero-badge">Instant STL turntable studio</p>
+        <h1>Motivora Studio</h1>
+        <p>Turn your STL models into cinematic product motion. Upload, preview the pose, and let Motivora Studio drive Blender in the background to deliver buttery-smooth MP4/WebM spins ready for Shopify, Etsy, Kickstarter, and investor decks.</p>
+        <div class="hero-cta">
+          <a class="primary" href="{{ url_for('render_page') }}">Try it Now</a>
+          <a class="ghost" href="{{ url_for('download_page') }}">Download Desktop App</a>
+        </div>
+      </div>
+      <div>
+        <div class="metrics">
+          <div><span>10 sec</span>Default clip length w/ 250+ frames</div>
+          <div><span>3 tiers</span>Fast, Standard, or Ultra render quality</div>
+          <div><span>2 mins</span>Average time to download final video</div>
+        </div>
+      </div>
+    </section>
+    {% endif %}
+    <section id="workflow">
+      <div class="card-container">
+      {% if app_mode %}
+        <div class="card">
+          <div class="panel panel-left">
+            <div class="panel-heading" style="display: flex; justify-content: space-between; align-items: center;">
+              <div style="flex: 1;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+                  <h2 style="margin: 0;">Motivora Studio</h2>
+                  <a href="{{ url_for('index') }}" style="font-size: 0.85rem; color: var(--muted); text-decoration: none;">← Back to home</a>
+                </div>
+                <p class="subline" style="margin: 0;">Upload an STL, and we'll return a 360° transparent turntable video. No account required—just upload and render!</p>
+              </div>
+            </div>
+            {# Login/watermark UI hidden in app mode - removed temporarily #}
+            <div id="upload-section">
+          {% if message %}
+            <div class="message">{{ message }}</div>
+          {% endif %}
+          <div class="tips">
+            <details>
+              <summary>Need help choosing settings?</summary>
+              <ul>
+                <li><strong>Fast preview</strong>: Eevee render in under a minute for quick checks.</li>
+                <li><strong>Standard</strong>: Balanced Cycles render—good quality without long waits.</li>
+                <li><strong>Ultra</strong>: Highest quality Cycles render (4K, 512 samples). Great for final delivery.</li>
+              </ul>
+              <p><strong>Auto orientation</strong> keeps the longest dimension upright. Uncheck it if you want to pick an axis manually.</p>
+              <p>We render to a transparent background by default so you can composite over any color later.</p>
+              <p>If a model fails to import, try reducing triangle count and making sure normals face outward.</p>
+            </details>
+          </div>
+          <form id="upload-form" method="post" enctype="multipart/form-data">
+            <input type="file" name="model" id="model" accept=".stl" required>
+            <label class="field toggle">
+              <span>Auto orientation (recommended)</span>
+              <input type="checkbox" name="auto_orientation" id="auto_orientation" value="1" checked>
+            </label>
+            <label class="field">
+              Rotation Axis
+              <select name="axis" id="axis">
+                <option value="Z" selected>Vertical (spin upright)</option>
+                <option value="Y">Side-to-side (spin around Y)</option>
+                <option value="X">Front flip (spin around X)</option>
+              </select>
+            </label>
+            <label class="field">
+              Quality
+              <select name="quality" id="quality">
+                <option value="fast" {% if default_quality == "fast" %}selected{% endif %}>Fast preview</option>
+                <option value="standard" {% if default_quality == "standard" %}selected{% endif %}>Standard</option>
+                <option value="ultra" {% if default_quality == "ultra" %}selected{% endif %}>Ultra (best)</option>
+              </select>
+            </label>
+            <label class="field">
+              Video Format
+              <select name="format" id="format">
+                <option value="mp4" {% if OUTPUT_FORMAT == "mp4" %}selected{% endif %}>MP4 (H.264)</option>
+                <option value="webm" {% if OUTPUT_FORMAT == "webm" %}selected{% endif %}>WebM (VP9, transparent)</option>
+              </select>
+            </label>
+            <label class="field">
+              Resolution
+              <select name="resolution" id="resolution">
+                <option value="720">720p (HD)</option>
+                <option value="1080" selected>1080p (Full HD)</option>
+                <option value="1440">1440p (2K)</option>
+                <option value="2160">2160p (4K)</option>
+              </select>
+            </label>
+            <label class="field">
+              Starting Angle (degrees)
+              <input type="number" name="offset" id="offset" value="0" min="0" max="360" step="5">
+            </label>
+            <label class="field">
+              Light Temperature (Kelvin)
+              <select name="kelvin" id="kelvin">
+                <option value="2000">2000K - Candlelight (Warm/Orange)</option>
+                <option value="2700">2700K - Warm White (Yellow)</option>
+                <option value="3200">3200K - Tungsten (Yellow-White)</option>
+                <option value="4000">4000K - Cool White (Neutral)</option>
+                <option value="5600" selected>5600K - Daylight (Natural/White)</option>
+                <option value="6500">6500K - Daylight Cool (Blue-White)</option>
+                <option value="8000">8000K - Sky Light (Cool Blue)</option>
+              </select>
+            </label>
+            <label class="field toggle">
+              <span>Auto brightness (recommended)</span>
+              <input type="checkbox" name="auto_brightness" id="auto_brightness" value="1" checked>
+            </label>
+            <label class="field" id="exposure-field" style="display: none;">
+              Brightness (Exposure)
+              <div style="display: flex; align-items: center; gap: 12px; margin-top: 8px;">
+                <input type="range" name="exposure" id="exposure" value="0" min="-2" max="2" step="0.1" style="flex: 1; cursor: pointer;">
+                <div class="brightness-meter" style="width: 140px; height: 12px; background: linear-gradient(to right, #000 0%, #333 25%, #666 50%, #999 75%, #fff 100%); border-radius: 6px; position: relative; overflow: visible; border: 1px solid rgba(32, 28, 22, 0.2); box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);">
+                  <div class="brightness-indicator" id="brightness-indicator" style="position: absolute; left: 50%; top: 50%; width: 4px; height: 16px; background: var(--accent); transform: translate(-50%, -50%); transition: left 0.15s ease; box-shadow: 0 0 8px rgba(212, 118, 15, 0.8), 0 0 4px rgba(212, 118, 15, 0.4); border-radius: 2px; z-index: 10;"></div>
+                </div>
+                <span id="exposure-value" style="font-size: 0.9rem; color: var(--ink); min-width: 40px; text-align: right; font-weight: 500;">0.0</span>
+              </div>
+              <div style="font-size: 0.75rem; color: var(--muted); margin-top: 4px; display: flex; justify-content: space-between;">
+                <span>Darker</span>
+                <span>Brighter</span>
+              </div>
+            </label>
+            <button type="submit" id="submit-button" class="primary-button">Upload & Render</button>
+          </form>
+          <div class="upload-status" id="upload-status"></div>
+        </div>
+        <div id="progress-section" class="hidden">
+          <div class="status-large" id="status-label">{{ status_message }}</div>
+          <div class="progress-track"><div class="progress-bar" id="progress-bar"></div></div>
+          <div class="eta-display">
+            <span id="total-eta" class="eta-total"></span>
+          </div>
+          <div class="progress-actions">
+            <button type="button" id="cancel-button" class="ghost-button">Cancel Render</button>
+            <button type="button" id="download-button" class="primary-button hidden">Download Video</button>
+          </div>
+          <p class="progress-hint">You can leave this tab open while we render your turntable in Blender.</p>
+        </div>
+      </div>
+      <div class="panel panel-right">
+        <div class="preview-header">
+          <div>
+            <h2>Live Preview</h2>
+            <p class="preview-subtitle">Spin, orbit, and confirm orientation before rendering.</p>
+          </div>
+          <button type="button" class="ghost-button" id="reset-view" disabled>Reset view</button>
+        </div>
+        <div class="summary-badges">
+          <span class="badge" id="summary-quality">Quality • Ultra (best)</span>
+          <span class="badge" id="summary-orientation">Auto orientation</span>
+          <span class="badge" id="summary-axis">Spin Z • 0°</span>
+        </div>
+        <div class="viewer-shell">
+          <canvas id="viewer"></canvas>
+          <div class="viewer-toolbar">
+            <button type="button" id="preview-spin" class="ghost-button" disabled>Preview Spin</button>
+          </div>
+        </div>
+        <p class="viewer-note" id="viewer-note">Select an STL to preview.</p>
+      </div>
+    </div>
+      {% else %}
+        <div class="card" style="max-width:720px; text-align:center; margin: 0 auto;">
+          <div class="panel-heading" style="text-align:center;">
+            <h2>Try Motivora Studio Online</h2>
+            <p class="subline">Upload your STL file and get a professional turntable video in minutes. No download required!</p>
+          </div>
+          <p class="text" style="color:var(--muted); font-size:1rem; margin: 20px 0;">
+            Works right in your browser. Upload, preview, and download your render—all for free. <strong>No account needed!</strong>
+          </p>
+          <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-top: 24px;">
+            <a class="primary-button" style="display:inline-flex; justify-content:center; text-decoration: none;" href="{{ url_for('render_page') }}">Start Rendering Now</a>
+            <a class="ghost-button" style="display:inline-flex; justify-content:center; text-decoration: none;" href="{{ url_for('download_page') }}">Download Desktop App</a>
+          </div>
+          <div style="margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border);">
+            <p style="font-size: 0.9rem; color: var(--muted); margin: 0;">
+              ✨ New users get 5 free renders per month when you <a href="{{ url_for('auth_signup') }}" style="color: var(--accent); font-weight: 600;">sign up</a>
+            </p>
+          </div>
+        </div>
+      {% endif %}
+      </div>
+    </section>
+    {% if not app_mode %}
+    <section class="examples" id="examples">
+      <div class="example-card">
+        <video controls playsinline muted poster="https://images.unsplash.com/photo-1489515217757-5fd1be406fef?auto=format&fit=crop&w=900&q=60">
+          <source src="https://cdn.coverr.co/videos/coverr-concrete-lion-8792/1080p.mp4" type="video/mp4">
+        </video>
+        <div>
+          <h3>Matte prototype → Warm studio spin</h3>
+          <p>Imported STL from Fusion 360, auto-oriented on Z, rendered Ultra quality for Kickstarter hero section.</p>
+        </div>
+      </div>
+      <div class="example-card">
+        <video controls playsinline muted poster="https://images.unsplash.com/photo-1504215680853-026ed2a45def?auto=format&fit=crop&w=900&q=60">
+          <source src="https://cdn.coverr.co/videos/coverr-3d-printer-7499/1080p.mp4" type="video/mp4">
+        </video>
+        <div>
+          <h3>Accessory STL → Transparent loop</h3>
+          <p>Dragged an STL accessory, ran Eevee Fast tier, and delivered a transparent VP9 clip for Etsy listings in under two minutes.</p>
+        </div>
+      </div>
+      <div class="example-card">
+        <img src="https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=900&q=60" alt="Motivora storyboard">
+        <div>
+          <h3>Storyboard preview</h3>
+          <p>Use the built-in WebGL viewer to check scale, axis, and spin before spending render time.</p>
+        </div>
+      </div>
+    </section>
+    <section class="seo-section" id="seo-benefits">
+        <h2>Why makers and product marketers choose Motivora</h2>
+        <p class="lead">You no longer need to rent a studio or master Blender to get investor-ready hero clips. The Motivora pipeline handles auto-scaling, AI orientation, soft lighting, and VP9 exports so you can focus on launching.</p>
+      <div class="seo-grid">
+        <article class="seo-card">
+          <h3>Optimized for marketplaces</h3>
+          <p>1080 × 1080 square crops with transparent pixels slot perfectly into Amazon A+ Content, Etsy videos, TikTok feeds, and Meta Ads.</p>
+        </article>
+        <article class="seo-card">
+          <h3>Drag, preview, deliver</h3>
+          <p>Live WebGL preview double-checks the pose, axis, and scale so you don’t waste render time on sideways uploads.</p>
+        </article>
+        <article class="seo-card">
+          <h3>Blender-grade lighting</h3>
+          <p>Two area lights plus a warm fill mimic real product booths. Ultra mode unlocks Cycles with up to 512 samples for creamy highlights.</p>
+        </article>
+        <article class="seo-card">
+          <h3>Queue-ready for agencies</h3>
+          <p>Batch upload STL files, monitor progress in real time, and download MP4 or WebM deliverables packaged with sensible filenames.</p>
+        </article>
+      </div>
+    </section>
+    <section class="pricing" id="pricing">
+      <h2 style="color:var(--ink);">Subscription-friendly pricing</h2>
+      <p style="color:var(--muted); max-width:640px;">Release Motivora locally and charge makers a simple subscription. Stripe/Lemon Squeezy webhooks can enable/disable access instantly.</p>
+      <div class="pricing-grid">
+        <article class="pricing-tier">
+          <h3>Creator Monthly</h3>
+          <div class="price">$0.99<span style="font-size:1rem;">/mo</span></div>
+          <ul>
+            <li>Runs on their device with Blender</li>
+            <li>Auto orientation + Fast render preset</li>
+            <li>Cancel anytime</li>
+          </ul>
+        </article>
+        <article class="pricing-tier">
+          <h3>Studio Annual</h3>
+          <div class="price">$10<span style="font-size:1rem;">/yr</span></div>
+          <ul>
+            <li>Unlocks Standard & Ultra quality</li>
+            <li>Offline grace period + priority fixes</li>
+            <li>Best margin for you and your customers</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+    <section class="faq" id="faq">
+      <h2 style="color:var(--ink);">Questions founders ask before checkout</h2>
+      <details>
+        <summary>Will this run on normal STL exports from my slicer?</summary>
+        <p>Yes. Motivora normalizes the STL’s scale/origin, applies a neutral material, and centers it before rendering.</p>
+      </details>
+      <details>
+        <summary>Can I keep rendering while away from my laptop?</summary>
+        <p>The progress endpoint keeps the job alive, so you can close the preview and return later to download the finished clip.</p>
+      </details>
+      <details>
+        <summary>Does Motivora support transparent background video?</summary>
+        <p>Choose WebM VP9 for alpha-friendly exports, or MP4 for social channels that require H.264.</p>
+      </details>
+      <details>
+        <summary>How do I charge customers?</summary>
+        <p>Connect Stripe Checkout or Lemon Squeezy to sell Fast/Standard/Ultra credits, then point the success URL at this app.</p>
+      </details>
+    </section>
+    {% endif %}
+  </main>
+  {% if not app_mode %}
+  <footer class="site-footer">
+    <p>© {{ current_year or 2025 }} Motivora Studio. Built for makers, agencies, and ecommerce teams who need high-converting 3D turntables on demand.</p>
+  </footer>
+  {% endif %}
+</body>
+</html>
